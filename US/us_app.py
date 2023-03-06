@@ -6,6 +6,12 @@ import requests
 # User server (US)
 app = flask.Flask("User server")
 
+@app.before_request
+def before_request():
+    print("Received request from {} at {}".format(
+        flask.request.remote_addr, flask.request.url
+    ))
+
 @app.route("/")
 def index():
     return "Hello from the user server!"
@@ -56,7 +62,6 @@ def fibonacci():
 
         # receive response from AS
         data, address = sock.recvfrom(4096)
-        print("Received %s bytes from %s" % (len(data), address))
         sock.close()
 
         # jsonify the response
@@ -78,7 +83,7 @@ def fibonacci():
             else:
                 flask.abort(response.status_code, response.text)
 
-
-app.run(port=8080)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
 
 

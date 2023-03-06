@@ -106,7 +106,7 @@ def run():
     server_address = ('localhost', 53533)
     sock.bind(server_address) 
 
-    print("Authoritative Server is running on {}:{} ..." .format(
+    print("Authoritative Server is running on http://{}:{} ..." .format(
         server_address[0], server_address[1]))
 
     while True:

@@ -1,5 +1,7 @@
 # DNS Message Format for Authoritative Server
 
+This is a documenetation of the DNS messages supported by the authoritative server.
+
 There are two types of DNS messages: request and response
 
 We only implement type-A record and the following types of requests and responses:

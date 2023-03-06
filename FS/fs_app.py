@@ -12,6 +12,12 @@ def _fib(X):
         X -= 1
     return a
 
+@app.before_request
+def before_request():
+    print("Received request from {} at {}".format(
+        flask.request.remote_addr, flask.request.url
+    ))
+
 @app.route("/")
 def index():
     return "Hello from the fibonacci server!"
@@ -113,7 +119,7 @@ def fibonacci():
     if number < 0:
         flask.abort(400, "Bad request! Argument number must be nonnegative integer.")
 
-    return str(_fib(number))
+    return "blah "+str(_fib(number))
 
 
-app.run(port=9090)
+app.run(host="0.0.0.0",port=9090)
