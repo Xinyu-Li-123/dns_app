@@ -1,0 +1,5 @@
+venv/
+myvenv/
+.vscode/
+
+draft*
