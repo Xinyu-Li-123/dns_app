@@ -40,7 +40,7 @@ def _validate_request(data):
             return False, "Missing parameters"
         else:
             return True, ""
-    elif data["action"] == "query":
+    elif data["action"] == "lookup":
         if not data.get("name") or not data.get("type"):
             return False, "Missing parameters"
         else:
@@ -72,9 +72,9 @@ def _register_handler(data):
     }
 
 
-def _query_handler(data):
+def _lookup_handler(data):
     """
-    Handle query request. Return a json object
+    Handle lookup request. Return a json object
     """ 
     conn = _connect_db()
     c = conn.cursor()
@@ -138,13 +138,13 @@ def run():
                     print("Failed to register: {}".format(
                         response["message"]
                         ))
-            elif data["action"] == "query":
-                print("Querying...")
-                response = _query_handler(data)
+            elif data["action"] == "lookup":
+                print("Looking up hostname...")
+                response = _lookup_handler(data)
                 if response["status"]:
-                    print("Query successful")
+                    print("Lookup successful")
                 else:
-                    print("Failed to query: {}".format(
+                    print("Failed to lookup: {}".format(
                         response["message"]
                         ))
             else:

@@ -1,4 +1,7 @@
 import flask 
+import socket
+import json
+import requests
 
 # User server (US)
 app = flask.Flask("User server")
@@ -39,15 +42,41 @@ def fibonacci():
 
     # if any parameter is missing, return 400 Bad Request
     if not is_request_valid:
-        flask.abort(400, 'Please enter all 5 arguments (hostname, fs_port, number, as_ip, is_request_valid)')
+        flask.abort(400, 'Please enter all 5 arguments (hostname, fs_port, number, as_ip, as_port)')
     else:
-        # TODO:
-        # request AS to convert fs_hostname to fs_ip
-        # request fs_ip/fibonacci?number=X
-        # return the result fibonacci number and 200 OK
-        pass 
+        # request AS to convert fs_hostname to fs_ip via UDP 
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        server_address = (as_ip, int(as_port))
+        message = {
+            "action": "lookup",
+            "type": "A",
+            "name": hostname
+        }
+        sock.sendto(json.dumps(message).encode(), server_address)
 
-    return "<h1>Well Done</h1>Good job :)"
+        # receive response from AS
+        data, address = sock.recvfrom(4096)
+        print("Received %s bytes from %s" % (len(data), address))
+        sock.close()
+
+        # jsonify the response
+        data = json.loads(data.decode())
+        # if AS failed
+        if not data["status"]:
+            flask.abort(400, data["message"])
+        # if AS succeeded
+        else:
+            fs_ip = data["value"]
+
+            # request fs_ip/fibonacci?number=X via TCP and HTTP
+            response = requests.get(
+                f"http://{fs_ip}:{fs_port}/fibonacci?number={number}")
+        
+            # return the result fibonacci number and 200 OK
+            if response.status_code == 200:
+                return response.text
+            else:
+                flask.abort(response.status_code, response.text)
 
 
 app.run(port=8080)

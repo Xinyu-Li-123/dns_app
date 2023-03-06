@@ -31,20 +31,20 @@ Error message can be one of the following:
 "Invalid TTL"      # invalid TTL
 ```
 
-## DNS Query
+## DNS lookup
 
-Query the DNS database
+lookup the DNS database
 
 ```python
 request = {
-    "action": "query",
+    "action": "lookup",
     "type": "A",
     "name": hostname
 }
 
 if response["status"] == True:
     response = {
-        "action": "query",
+        "action": "lookup",
         "status": True,
         "name": hostname,
         "value": ip_address,
@@ -53,7 +53,7 @@ if response["status"] == True:
     }
 else:
     response = {
-        "action": "query",
+        "action": "lookup",
         "status": False,
         "message": "Error Message"
     }
