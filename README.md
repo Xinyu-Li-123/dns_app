@@ -65,7 +65,7 @@ cd US/
 docker build -t dns-app/us .
 ```
 
-## How to run applications on docker containers
+## How to run applications on docker containers locally on your machine
 
 Note that the servers must be started in the following order: **AS, FS, US**.
 
@@ -74,7 +74,7 @@ Note that the servers must be started in the following order: **AS, FS, US**.
 To run the authoritative server on a docker container, run the following command:
 
 ```bash
-docker run -t -p 53533:53533 dns-app/as
+docker run -t -p 53533:53533/udp dns-app/as
 ```
 
 ### FS
@@ -82,7 +82,7 @@ docker run -t -p 53533:53533 dns-app/as
 To run the fibonacci server on a docker container, run the following command:
 
 ```bash
-docker run -t -p 9090:9090 dns-app/fs
+docker run -t -p 9090:9090 -p 9091:9091/udp --network=host dns-app/fs
 ```
 
 ### US

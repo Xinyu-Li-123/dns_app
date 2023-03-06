@@ -21,11 +21,11 @@ EXPOSE 53533
 # Print some text to the console
 RUN echo "Hello World from Docker image for Authoritative server at $(pwd)"
 
-RUN ls -lh 
+# RUN ls -lh 
 
-RUN python --version
+# RUN python --version
 
-RUN pip list
+# RUN pip list
 
 # Run the command to start the app
 CMD ["python3", "as_app.py"]

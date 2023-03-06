@@ -6,28 +6,31 @@ import socket
 import json 
 
 # create UDP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
 
-server_address = ('localhost', 5005)
+    server_address = ('0.0.0.0', 5005)
+    # server_address = ('localhost', 5005)
 
-# bind the socket to the port
-sock.bind(server_address)
+    # bind the socket to the port
+    sock.bind(server_address)
 
-while True:
-    print("Waiting for a message...")
+    print("Server is running on {}:{}" .format(*server_address))
 
-    # receive data from client
-    data, address = sock.recvfrom(4)
+    while True:
+        print("Waiting for a message...")
 
-    print("Received %s bytes from %s" % (len(data), address))
+        # receive data from client
+        data, address = sock.recvfrom(4096)
 
-    try:    
-        data = json.loads(data.decode())
-        print(data)
-    except:
-        print("Error: data is not in json format")
+        print("Received %s bytes from %s" % (len(data), address))
 
-    if data:
-        # send data back to client (in this scenario, the server echoes the message)
-        sent = sock.sendto(data.encode(), address)
-        print("Sent %s bytes back to %s" % (sent, address))
+        try:    
+            data = json.loads(data.decode())
+            print(data)
+        except:
+            print("Error: data is not in json format")
+
+        if data:
+            # send data back to client (in this scenario, the server echoes the message)
+            sent = sock.sendto(data.encode(), address)
+            print("Sent %s bytes back to %s" % (sent, address))

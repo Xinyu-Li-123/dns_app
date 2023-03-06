@@ -103,7 +103,7 @@ def run():
     # create UDP socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    server_address = ('localhost', 53533)
+    server_address = ('0.0.0.0', 53533)
     sock.bind(server_address) 
 
     print("Authoritative Server is running on http://{}:{} ..." .format(

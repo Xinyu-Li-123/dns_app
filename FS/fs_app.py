@@ -62,20 +62,23 @@ def register():
     _validate_register(body)
 
     # register FS to AS via UDP on port 53533 (send a DNS message to AS)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_address = (body["as_ip"], int(body["as_port"]))
-    message = {
-        "action": "register",
-        "type": "A",
-        "name": body["hostname"],
-        "value": body["ip"],
-        "ttl": 3600
-    }
-    sock.sendto(json.dumps(message).encode(), server_address)
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+        server_address = (body["as_ip"], int(body["as_port"]))
+        # use different port for udp socket
+        my_address = (body["ip"], 9091)
+        sock.bind(my_address)
+        message = {
+            "action": "register",
+            "type": "A",
+            "name": body["hostname"],
+            "value": body["ip"],
+            "ttl": 3600
+        }
+        sock.sendto(json.dumps(message).encode(), server_address)
 
-    # receive response from AS
-    data, address = sock.recvfrom(4096)
-    print("Received %s bytes from %s" % (len(data), address))
+        # receive response from AS
+        data, address = sock.recvfrom(4096)
+        print("Received %s bytes from %s" % (len(data), address))
     
     # jsonify the response
     data = json.loads(data.decode())
