@@ -122,7 +122,7 @@ def fibonacci():
     if number < 0:
         flask.abort(400, "Bad request! Argument number must be nonnegative integer.")
 
-    return "blah "+str(_fib(number))
+    return str(_fib(number))
 
 
 app.run(host="0.0.0.0",port=9090)
